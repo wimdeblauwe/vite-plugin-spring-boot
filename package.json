@@ -36,6 +36,7 @@
         "@types/node": "^20.14.11",
         "esbuild": "^0.23.0",
         "eslint": "^8.57.0",
+        "globby": "^14.0.2",
         "typescript": "^5.5.3",
         "typescript-eslint": "^7.16.1",
         "vite": "^5.3.4"
