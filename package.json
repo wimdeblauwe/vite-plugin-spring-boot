@@ -1,0 +1,52 @@
+{
+    "name": "@wimdeblauwe/vite-plugin-spring-boot",
+    "version": "0.1.0",
+    "description": "Vite plugin for Spring Boot backend",
+    "author": "Wim Deblauwe <wim.deblauwe@gmail.com>",
+    "private": false,
+    "license": "Apache-2.0",
+    "homepage": "https://github.com/wimdeblauwe/vite-plugin-spring-boot",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/wimdeblauwe/vite-plugin-spring-boot"
+    },
+    "bugs": {
+        "url": "https://github.com/wimdeblauwe/vite-plugin-spring-boot/issues"
+    },
+    "type": "module",
+    "source": "src/index.ts",
+    "exports": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+    },
+    "types": "./dist/index.d.ts",
+    "files": [
+        "/dist"
+    ],
+    "scripts": {
+        "build-plugin": "rm -rf dist && npm run build-plugin-types && npm run build-plugin-esm",
+        "build-plugin-types": "tsc --emitDeclarationOnly",
+        "build-plugin-esm": "esbuild src/index.ts --platform=node --format=esm --outfile=dist/index.js",
+        "lint": "npx eslint src/*",
+        "test": "vitest run"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.7.0",
+        "@types/eslint__js": "^8.42.3",
+        "@types/node": "^20.14.11",
+        "esbuild": "^0.23.0",
+        "eslint": "^8.57.0",
+        "typescript": "^5.5.3",
+        "typescript-eslint": "^7.16.1",
+        "vite": "^5.3.4"
+    },
+    "peerDependencies": {
+        "vite": "^5"
+    },
+    "keywords": [
+        "vite-plugin",
+        "vite",
+        "plugin",
+        "spring-boot"
+    ]
+}
