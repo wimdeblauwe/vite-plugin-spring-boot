@@ -9,10 +9,16 @@ This [vite plugin](https://vitejs.dev/guide/api-plugin) has 2 main functionlitie
 
 ## Usage
 
+Add the plugin:
+
+```
+npm i -D @wim.deblauwe/vite-plugin-spring-boot
+```
+
 Update `vite.config.js` to use the plugin:
 
 ```js
-import springBoot from '@wimdeblauwe/vite-plugin-spring-boot';
+import springBoot from '@wim.deblauwe/vite-plugin-spring-boot';
 
 export default defineConfig({
   plugins: [
@@ -29,13 +35,13 @@ export default defineConfig({
 ## Testing locally
 
 1. Run `npm link` from this plugin.
-2. Run `npm link @wimdeblauwe/vite-plugin-spring-boot` from the project that would like to use the plugin
+2. Run `npm link @wim.deblauwe/vite-plugin-spring-boot` from the project that would like to use the plugin
 
 During development, run `npm run build-plugin` to have the changes available in the project that uses the plugin.
 
 When done, you can run the following commands:
 
-1. Run `npm unlink @wimdeblauwe/vite-plugin-spring-boot` in the project that uses the plugin.
+1. Run `npm unlink @wim.deblauwe/vite-plugin-spring-boot` in the project that uses the plugin.
 2. Run `npm unlink` from this plugin.
 
 ## Releasing
