@@ -1,5 +1,5 @@
 {
-    "name": "@wimdeblauwe/vite-plugin-spring-boot",
+    "name": "@wim.deblauwe/vite-plugin-spring-boot",
     "version": "0.1.0",
     "description": "Vite plugin for Spring Boot backend",
     "author": "Wim Deblauwe <wim.deblauwe@gmail.com>",
