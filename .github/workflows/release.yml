@@ -4,8 +4,12 @@
 name: Release
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -31,3 +35,17 @@ jobs:
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+  release:
+    name: Release pushed tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${tag}" \
+              --generate-notes

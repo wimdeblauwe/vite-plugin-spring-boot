@@ -37,3 +37,10 @@ When done, you can run the following commands:
 
 1. Run `npm unlink @wimdeblauwe/vite-plugin-spring-boot` in the project that uses the plugin.
 2. Run `npm unlink` from this plugin.
+
+## Releasing
+
+1. Set the version number in `package.json`
+2. Commit locally.
+3. Tag the commit with the version number (e.g. `1.0.0`)
+4. Push the commit and the tag to remote. This will trigger the release action on GitHub.
