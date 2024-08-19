@@ -37,7 +37,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
   release:
-    name: Release pushed tag
+    needs: publish-npm
     runs-on: ubuntu-latest
     steps:
       - name: Create release
