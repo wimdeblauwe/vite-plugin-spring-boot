@@ -29,6 +29,8 @@ export default function springBoot() {
         const relativePath = path.relative(server.config.root, file);
         const outputPath = path.join(outputDir, relativePath);
         copyFile(file, outputPath, true);
+        // Force a full page reload when a html template was updated
+        server.ws.send({ type: "full-reload" });
       }
     },
     async buildEnd() {
