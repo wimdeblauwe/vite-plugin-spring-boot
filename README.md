@@ -41,8 +41,8 @@ During development, run `npm run build-plugin` to have the changes available in 
 
 When done, you can run the following commands:
 
-1. Run `npm unlink @wim.deblauwe/vite-plugin-spring-boot` in the project that uses the plugin.
-2. Run `npm unlink` from this plugin.
+1. Run `npm unlink --no-save @wim.deblauwe/vite-plugin-spring-boot` in the project that uses the plugin.
+2. Run `npm unlink -g` from this plugin.
 
 ## Releasing
 
