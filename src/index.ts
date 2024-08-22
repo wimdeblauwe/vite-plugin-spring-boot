@@ -19,17 +19,18 @@ export default function springBoot() {
     async configureServer(server: ViteDevServer) {
       const rootDir = server.config.root;
       await copyHtmlFiles(rootDir, outputDir);
+      await copySvgFiles(rootDir, outputDir);
       writeDevServerConfigFile(config, devServerConfigOutputFile);
       updateDevServerConfigFile(server, devServerConfigOutputFile);
     },
     handleHotUpdate(context: HmrContext) {
       const file: string = context.file;
       const server: ViteDevServer = context.server;
-      if (path.extname(file) === '.html') {
+      if (path.extname(file) === '.html' || path.extname(file) === '.svg') {
         const relativePath = path.relative(server.config.root, file);
         const outputPath = path.join(outputDir, relativePath);
         copyFile(file, outputPath, true);
-        // Force a full page reload when a html template was updated
+        // Force a full page reload when a file was updated
         server.ws.send({ type: "full-reload" });
       }
     },
@@ -98,11 +99,22 @@ function copyFile(src: string, dest: string, logCopy = false) {
 
 async function copyHtmlFiles(rootDir: string, outputDir: string) {
   // Copy all HTML files when the server starts
-  const files = await globby('**/*.html', {cwd: rootDir});
+  await copyFiles('**/*.html', rootDir, outputDir);
+}
+
+async function copySvgFiles(rootDir: string, outputDir: string) {
+  // Copy all SVG files when the server starts
+  await copyFiles('**/*.svg', rootDir, outputDir);
+}
+
+async function copyFiles(patterns: string, rootDir: string, outputDir: string) {
+  const files = await globby(patterns, {cwd: rootDir});
   files.forEach((file: string) => {
     const srcPath = path.join(rootDir, file);
     const destPath = path.join(outputDir, file);
     copyFile(srcPath, destPath);
   });
-  console.log(`Copied ${files.length} files to ${outputDir}`);
+  if (files.length > 0) {
+      console.log(`Copied ${files.length} files to ${outputDir}`);
+  }
 }
