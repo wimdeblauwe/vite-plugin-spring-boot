@@ -27,11 +27,13 @@ export default defineConfig({
 });
 ```
 
-This plugins should be used together with
+This plugin should be used together with
 the [vite-spring-boot](https://github.com/wimdeblauwe/vite-spring-boot)
 library on the backend.
 
-The easiest way to generate a working setup is to generate the Spring Boot project using [ttcli](https://github.com/wimdeblauwe/ttcli).
+> [!TIP]
+> The easiest way to generate a working setup is to generate the Spring Boot project
+> using [ttcli](https://github.com/wimdeblauwe/ttcli).
 
 ## Building
 
