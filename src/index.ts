@@ -4,13 +4,21 @@ import fs from "fs";
 import {globby} from "globby";
 import {minimatch} from "minimatch";
 
-export default function springBoot() {
+interface SpringBootOptions {
+  /**
+   * Defines the file paths for files that need to be copied as is when changed. After they are
+   * copied, a full page refresh is done. By default, they are equal to `['**\/*.html', '**\/*.svg']`.
+   */
+  fullCopyFilePaths?: string[];
+}
+
+export default function springBoot(options: SpringBootOptions = {}) {
   const targetDir: string = path.resolve(process.cwd(), 'target');
   const outputDir: string = path.join(targetDir, 'classes');
   const devServerConfigOutputDir: string = path.join(targetDir, 'vite-plugin-spring-boot');
   const devServerConfigOutputFile: string = path.join(devServerConfigOutputDir, 'dev-server-config.json');
 
-  const filePathsToHandle = ['**/*.html', '**/*.svg'];
+  const filePathsToHandle = options.fullCopyFilePaths || ['**/*.html', '**/*.svg'];
 
   let config: ResolvedConfig;
 
