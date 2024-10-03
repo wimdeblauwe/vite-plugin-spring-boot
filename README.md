@@ -35,6 +35,60 @@ library on the backend.
 > The easiest way to generate a working setup is to generate the Spring Boot project
 > using [ttcli](https://github.com/wimdeblauwe/ttcli).
 
+## Configuration
+
+### fullCopyFilePaths
+
+Allows to set what file paths should be copied when anything changes to the files in those file paths.
+After they are copied, a full page refresh is done.
+
+Example:
+
+```js
+export default defineConfig({
+    plugins: [
+        springBoot({
+            fullCopyFilePaths: {
+                include: ['**/*.html', '**/*.svg', '**/*.png']
+            }
+        }),
+    ],
+});
+```
+
+If the option is not set, the default is used: `['**/*.html', '**/*.svg']`.
+
+It is also possible to define `exclude` to exclude some file paths:
+
+```js
+export default defineConfig({
+    plugins: [
+        springBoot({
+            fullCopyFilePaths: {
+                include: ['**/*.html', '**/*.svg'],
+                exclude: ['**/dontcopyme.svg']
+            }
+        }),
+    ],
+});
+```
+
+### verbose
+
+When setting `verbose` to `true`, the plugin will log more information about what files it copies.
+
+Example:
+
+```js
+export default defineConfig({
+    plugins: [
+        springBoot({
+            verbose: true
+        }),
+    ],
+});
+```
+
 ## Building
 
 * Run `npm install`
