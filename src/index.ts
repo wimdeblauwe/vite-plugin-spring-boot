@@ -2,12 +2,15 @@ import {HmrContext, ResolvedConfig, ViteDevServer} from "vite";
 import path from "path";
 import fs from "fs";
 import {globby} from "globby";
+import {minimatch} from "minimatch";
 
 export default function springBoot() {
   const targetDir: string = path.resolve(process.cwd(), 'target');
   const outputDir: string = path.join(targetDir, 'classes');
   const devServerConfigOutputDir: string = path.join(targetDir, 'vite-plugin-spring-boot');
   const devServerConfigOutputFile: string = path.join(devServerConfigOutputDir, 'dev-server-config.json');
+
+  const filePathsToHandle = ['**/*.html', '**/*.svg'];
 
   let config: ResolvedConfig;
 
@@ -18,15 +21,14 @@ export default function springBoot() {
     },
     async configureServer(server: ViteDevServer) {
       const rootDir = server.config.root;
-      await copyHtmlFiles(rootDir, outputDir);
-      await copySvgFiles(rootDir, outputDir);
+      await copyFiles(filePathsToHandle, rootDir, outputDir);
       writeDevServerConfigFile(config, devServerConfigOutputFile);
       updateDevServerConfigFile(server, devServerConfigOutputFile);
     },
     handleHotUpdate(context: HmrContext) {
       const file: string = context.file;
       const server: ViteDevServer = context.server;
-      if (path.extname(file) === '.html' || path.extname(file) === '.svg') {
+      if (filePathsToHandle.some(pattern => matchGlobPattern(pattern, file, server.config.root))) {
         const relativePath = path.relative(server.config.root, file);
         const outputPath = path.join(outputDir, relativePath);
         copyFile(file, outputPath, true);
@@ -36,9 +38,14 @@ export default function springBoot() {
     },
     async buildEnd() {
       const rootDir = config.root;
-      copyHtmlFiles(rootDir, outputDir);
+      copyFiles(filePathsToHandle, rootDir, outputDir);
     }
   }
+}
+
+function matchGlobPattern(pattern: string, filePath: string, rootDir: string): boolean {
+  const relativePath = path.relative(rootDir, filePath);
+  return minimatch(relativePath, pattern);
 }
 
 /**
@@ -97,17 +104,7 @@ function copyFile(src: string, dest: string, logCopy = false) {
   }
 }
 
-async function copyHtmlFiles(rootDir: string, outputDir: string) {
-  // Copy all HTML files when the server starts
-  await copyFiles('**/*.html', rootDir, outputDir);
-}
-
-async function copySvgFiles(rootDir: string, outputDir: string) {
-  // Copy all SVG files when the server starts
-  await copyFiles('**/*.svg', rootDir, outputDir);
-}
-
-async function copyFiles(patterns: string, rootDir: string, outputDir: string) {
+async function copyFiles(patterns: string[], rootDir: string, outputDir: string) {
   const files = await globby(patterns, {cwd: rootDir});
   files.forEach((file: string) => {
     const srcPath = path.join(rootDir, file);
