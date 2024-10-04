@@ -31,7 +31,8 @@
         "test": "vitest run"
     },
     "dependencies": {
-        "@rollup/pluginutils": "^5.1.2"
+        "@rollup/pluginutils": "^5.1.2",
+        "globby": "^14.0.2"
     },
     "devDependencies": {
         "@eslint/js": "^9.7.0",
@@ -39,7 +40,6 @@
         "@types/node": "^20.14.11",
         "esbuild": "^0.23.0",
         "eslint": "^8.57.0",
-        "globby": "^14.0.2",
         "typescript": "^5.5.3",
         "typescript-eslint": "^7.16.1",
         "vite": "^5.3.4"
