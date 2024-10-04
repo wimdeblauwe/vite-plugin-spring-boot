@@ -30,9 +30,11 @@
         "lint": "npx eslint src/*",
         "test": "vitest run"
     },
+    "dependencies": {
+        "@rollup/pluginutils": "^5.1.2"
+    },
     "devDependencies": {
         "@eslint/js": "^9.7.0",
-        "@rollup/pluginutils": "^5.1.2",
         "@types/eslint__js": "^8.42.3",
         "@types/node": "^20.14.11",
         "esbuild": "^0.23.0",
