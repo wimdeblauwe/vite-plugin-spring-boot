@@ -73,6 +73,22 @@ export default defineConfig({
 });
 ```
 
+### buildSystem
+
+By default, the plugin assumes that Maven is used, and it will copy files to `target/classes`.
+
+If you use Gradle and want things to be copied to `build/resources`, you can configure the plugin like this:
+
+```js
+export default defineConfig({
+    plugins: [
+        springBoot({
+            buildSystem: BuildSystem.Gradle
+        }),
+    ],
+});
+```
+
 ### verbose
 
 When setting `verbose` to `true`, the plugin will log more information about what files it copies.

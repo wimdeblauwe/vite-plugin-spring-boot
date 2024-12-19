@@ -4,6 +4,11 @@ import path from "path";
 import fs from "fs";
 import {globbySync} from "globby";
 
+export enum BuildSystem {
+    Maven = 'maven',
+    Gradle = 'gradle'
+}
+
 interface SpringBootOptions {
     fullCopyFilePaths?: {
         /**
@@ -21,11 +26,23 @@ interface SpringBootOptions {
      * Enable verbose logging of the copy actions this plugin does
      */
     verbose?: boolean;
+
+    /**
+     * Specify the build system to use (Maven or Gradle). Affects the output directory structure.
+     * Defaults to Maven if not specified.
+     */
+    buildSystem?: BuildSystem;
 }
 
 export default function springBoot(options: SpringBootOptions = {}) {
-    const targetDir: string = path.resolve(process.cwd(), 'target');
-    const outputDir: string = path.join(targetDir, 'classes');
+    const buildSystem = options.buildSystem || BuildSystem.Maven;
+
+    const targetDir: string = path.resolve(process.cwd(),
+        buildSystem === BuildSystem.Maven ? 'target' : 'build');
+
+    const outputDir: string = path.join(targetDir,
+        buildSystem === BuildSystem.Maven ? 'classes' : 'resources/main');
+
     const devServerConfigOutputDir: string = path.join(targetDir, 'vite-plugin-spring-boot');
     const devServerConfigOutputFile: string = path.join(devServerConfigOutputDir, 'dev-server-config.json');
 
@@ -35,6 +52,11 @@ export default function springBoot(options: SpringBootOptions = {}) {
     );
 
     const verbose: boolean = options.verbose || false;
+
+    if (verbose) {
+        console.log(`Using build system: ${buildSystem}`);
+        console.log(`Output directory: ${outputDir}`);
+    }
 
     let config: ResolvedConfig;
 
