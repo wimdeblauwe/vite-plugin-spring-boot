@@ -46,10 +46,7 @@ export default function springBoot(options: SpringBootOptions = {}) {
     const devServerConfigOutputDir: string = path.join(targetDir, 'vite-plugin-spring-boot');
     const devServerConfigOutputFile: string = path.join(devServerConfigOutputDir, 'dev-server-config.json');
 
-    const filter = createFilter(
-        options.fullCopyFilePaths?.include || ['**/*.html', '**/*.svg'],
-        options.fullCopyFilePaths?.exclude
-    );
+    let filter: (id: string | unknown) => boolean;
 
     const verbose: boolean = options.verbose || false;
 
@@ -60,6 +57,19 @@ export default function springBoot(options: SpringBootOptions = {}) {
 
     let config: ResolvedConfig;
 
+    const initializeFilter = (rootDir: string) => {
+        if (!filter) {
+            filter = createFilter(
+                options.fullCopyFilePaths?.include || ['**/*.html', '**/*.svg'],
+                options.fullCopyFilePaths?.exclude,
+                {
+                    resolve: rootDir,
+                }
+            );
+        }
+        return filter;
+    };
+
     return {
         name: "vite-plugin-spring-boot",
         configResolved(resolvedConfig: ResolvedConfig) {
@@ -67,14 +77,18 @@ export default function springBoot(options: SpringBootOptions = {}) {
         },
         async configureServer(server: ViteDevServer) {
             const rootDir = server.config.root;
-            await copyFiles(filter, rootDir, outputDir, verbose);
+            const currentFilter = createFilter(rootDir);
+
+            await copyFiles(currentFilter, rootDir, outputDir, verbose);
             writeDevServerConfigFile(config, devServerConfigOutputFile);
             updateDevServerConfigFile(server, devServerConfigOutputFile);
         },
         handleHotUpdate(context: HmrContext) {
             const file: string = context.file;
             const server: ViteDevServer = context.server;
-            if (filter(file)) {
+            const currentFilter = filter || initializeFilter(server.config.root);
+
+            if (currentFilter(file)) {
                 const relativePath = path.relative(server.config.root, file);
                 const outputPath = path.join(outputDir, relativePath);
                 copyFile(file, outputPath, true);
@@ -84,7 +98,9 @@ export default function springBoot(options: SpringBootOptions = {}) {
         },
         async buildEnd() {
             const rootDir = config.root;
-            copyFiles(filter, rootDir, outputDir, verbose);
+            const currentFilter = initializeFilter(rootDir);
+
+            copyFiles(currentFilter, rootDir, outputDir, verbose);
         }
     }
 }
