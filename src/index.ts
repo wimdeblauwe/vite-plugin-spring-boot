@@ -77,7 +77,7 @@ export default function springBoot(options: SpringBootOptions = {}) {
         },
         async configureServer(server: ViteDevServer) {
             const rootDir = server.config.root;
-            const currentFilter = createFilter(rootDir);
+            const currentFilter = initializeFilter(rootDir);
 
             await copyFiles(currentFilter, rootDir, outputDir, verbose);
             writeDevServerConfigFile(config, devServerConfigOutputFile);
