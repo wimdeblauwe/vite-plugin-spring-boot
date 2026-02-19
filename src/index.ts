@@ -109,9 +109,20 @@ export default function springBoot(options: SpringBootOptions = {}) {
  * Writes the static configuration of the Vite Dev Server to a file.
  */
 function writeDevServerConfigFile(config: ResolvedConfig, devServerConfigOutputFile: string) {
-    const host = config.server.host || 'localhost';
-    const port = config.server.port || 5173;
-    const configData = JSON.stringify({host, port}, null, 2);
+    const configHmrProtocol = typeof config.server.hmr === 'object' ? config.server.hmr.protocol : null;
+    const clientProtocol = configHmrProtocol ? (configHmrProtocol === 'wss' ? 'https' : 'http') : null;
+    const serverProtocol = config.server.https ? 'https' : 'http';
+    const protocol = clientProtocol ?? serverProtocol;
+
+    const configHmrHost = typeof config.server.hmr === 'object' ? config.server.hmr.host : null;
+    const configHost = typeof config.server.host === 'string' ? config.server.host : null;
+    const host = configHmrHost ?? configHost;
+
+    const configHmrClientPort = typeof config.server.hmr === 'object' ? config.server.hmr.clientPort : null;
+    const configPort = config.server.port;
+    const port = configHmrClientPort ?? configPort ?? 5173;
+    
+    const configData = JSON.stringify({`${protocol}://${host}`, port}, null, 2);
 
     ensureDirectoryExistence(devServerConfigOutputFile);
     fs.writeFileSync(
