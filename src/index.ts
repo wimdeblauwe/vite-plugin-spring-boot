@@ -1,5 +1,4 @@
-import {HmrContext, ResolvedConfig, ViteDevServer} from "vite";
-import {createFilter, FilterPattern} from '@rollup/pluginutils';
+import {createFilter, FilterPattern, HmrContext, ResolvedConfig, ViteDevServer} from "vite";
 import path from "path";
 import fs from "fs";
 import {globbySync} from "globby";
