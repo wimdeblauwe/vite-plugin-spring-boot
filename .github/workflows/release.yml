@@ -26,6 +26,9 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for npm trusted publishing (OIDC)
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -33,11 +36,10 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
+      - run: npm install -g npm@latest # Trusted publishing requires npm >= 11.5.1
       - run: npm ci
       - run: npm run build-plugin
       - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
   release:
     needs: publish-npm
