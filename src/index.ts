@@ -95,11 +95,13 @@ export default function springBoot(options: SpringBootOptions = {}) {
                 server.ws.send({type: "full-reload"});
             }
         },
-        async buildEnd() {
+        // Copy in writeBundle instead of buildEnd, because Vite empties the outDir (when `build.emptyOutDir` is set)
+        // after buildEnd, which would remove any copied files that end up inside the outDir (e.g. static/svg/*.svg)
+        async writeBundle() {
             const rootDir = config.root;
             const currentFilter = initializeFilter(rootDir);
 
-            copyFiles(currentFilter, rootDir, outputDir, verbose);
+            await copyFiles(currentFilter, rootDir, outputDir, verbose);
         }
     }
 }
